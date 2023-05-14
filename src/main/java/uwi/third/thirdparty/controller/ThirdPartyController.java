@@ -2,7 +2,6 @@ package uwi.third.thirdparty.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -59,10 +59,10 @@ public class ThirdPartyController {
 	        method = RequestMethod.DELETE,
 	        produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	public  ResponseEntity<ResponseDetails<Boolean>> deleteThirdParty(@RequestBody String thpid) throws IOException {
+	public  ResponseEntity<ResponseDetails<Boolean>> deleteThirdParty(@PathVariable String tpId) throws IOException {
 		
 		try {
-			Boolean success =thirdPartyService.thirdPartyDelete(thpid);
+			Boolean success =thirdPartyService.thirdPartyDelete(tpId);
 			ResponseDetails<Boolean> responseDetails = new ResponseDetails<Boolean>(ResponseStatus.SUCCESS, success,"Successful Transaction");
 			return new ResponseEntity<ResponseDetails<Boolean>>( responseDetails,HttpStatus.OK);
 		} catch (SQLException e) {

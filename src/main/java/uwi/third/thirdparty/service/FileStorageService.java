@@ -63,10 +63,12 @@ public class FileStorageService {
             File fl = new File(targetLocation.toString());
             File newfl = new File(newFileLocation.toString());
             
-            if (fl.exists()) 
-               FileUtils.forceDelete(new File(targetLocation.toString()));
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            fl.renameTo(newfl);
+            if (fl.exists())  
+              if (newfl.exists()) {
+                  FileUtils.forceDelete(new File(newFileLocation.toString()));
+              }
+              Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+             fl.renameTo(newfl);
             
             return newfl.getName();
         } catch (IOException ex) {

@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,17 @@ public class ThirdpartyServiceImpl implements ThirdPartyService {
 	
 	
     private final Path fileStorageLocation;
-	    
+	
+    
 	private final FileStorageProperties fileStorageProperties;
-	private Path targetLocation;
+	
+    private Path targetLocation;
 	private Path newFileLocation;
 	
 	@Autowired
 	 public ThirdpartyServiceImpl(FileStorageProperties fileStorageProperties) {
+		String s = fileStorageProperties.getDownloadDir();
+		System.out.println(s);
 	        this.fileStorageLocation = Paths.get(fileStorageProperties.getDownloadDir())
 	                .toAbsolutePath().normalize();
 	        
@@ -59,8 +62,8 @@ public class ThirdpartyServiceImpl implements ThirdPartyService {
 
 	@Override
 	public boolean thirdPartyDelete(String tpId) throws SQLException {
-		  dao.deleteFromGorpaud(tpId);
-		  dao.deleteFromGobtPac(tpId);
+		 dao.deleteFromGobtPac(tpId); 
+		dao.deleteFromGorpaud(tpId);
 		  return true;
 	}
 
@@ -79,7 +82,7 @@ public class ThirdpartyServiceImpl implements ThirdPartyService {
 	}
     
 	private ArrayList<Student> readBulkFile() {
-		
+		int lineCntr = 0;
 		ArrayList<Student> students = new ArrayList<Student>();
  		String delimiter = ",";
 		Path fileLocation = fileStorageLocation.resolve(fileStorageProperties.getDownloadFile());
@@ -90,17 +93,20 @@ public class ThirdpartyServiceImpl implements ThirdPartyService {
 	         String line = "";
 	         String[] tempArr;
 	         while((line = br.readLine()) != null) {
-	            tempArr = line.split(delimiter);
-	            Student student = new Student();
-	            student.setStudentId(tempArr[0]);
-	            student.setPidm(Integer.parseInt(tempArr[1]));
-	            student.setFirstName(tempArr[2]);
-	            student.setLastName(tempArr[3]);
-	            student.setThirdPartyId(tempArr[4]);
-	            student.setNewThirdPartyId(tempArr[5]);
-	            student.setEmail(tempArr[6]);
-	            student.setStatus(tempArr[7]);
-	            students.add(student);
+	        	 if (lineCntr > 0)  {
+		            tempArr = line.split(delimiter);
+		            Student student = new Student();
+		            student.setStudentId(tempArr[0]);
+		            student.setPidm(Integer.parseInt(tempArr[1]));
+		            student.setFirstName(tempArr[2]);
+		            student.setLastName(tempArr[3]);
+		            student.setThirdPartyId(tempArr[4]);
+		            student.setNewThirdPartyId(tempArr[5]);
+		            student.setEmail(tempArr[6]);
+		            student.setStatus(tempArr[7]);
+		            students.add(student);
+	        	 }
+	        	 lineCntr++;
 	         }
 	         br.close();
 	         } catch(IOException ioe) {

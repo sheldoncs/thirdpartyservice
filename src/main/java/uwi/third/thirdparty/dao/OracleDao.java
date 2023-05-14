@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.text.MessageFormat;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -21,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import uwi.third.thirdparty.config.OracleConfig;
 import uwi.third.thirdparty.entity.Student;
@@ -31,7 +32,7 @@ import uwi.third.thirdparty.util.NewDateFormatterImpl;
 
 
 
-@Repository
+@Service
 public class OracleDao {
 
 	private static final int  SPRIDEN_ID = 0;
@@ -47,6 +48,7 @@ public class OracleDao {
     Logger logger = LoggerFactory.getLogger(OracleDao.class);
 	
     @SuppressWarnings("unused")
+    
 	@Autowired
     private final OracleConfig service;
 
@@ -94,7 +96,7 @@ public class OracleDao {
 			
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
-				pidm = rs.getInt(1);
+				pidm = rs.getInt("gobtpac_pidm");
 			}
 			prepStmt.close();
 			rs.close();
